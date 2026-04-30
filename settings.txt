@@ -1,2 +1,0 @@
-api_key=AIzaSyBKkhSQHsMjwvgj3JhIvtZEt0k_17ob12Q
-model=gemini-3.1-flash-lite-preview
