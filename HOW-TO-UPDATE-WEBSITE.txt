@@ -1,0 +1,144 @@
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  MOUNTAIN SLAYERS WEBSITE — HOW TO UPDATE YOUR CONTENT
+  (No coding knowledge needed!)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📁 YOUR FILES (upload all of these to your website):
+  ├── index.html          ← Your main homepage
+  ├── join.html           ← The "Join Now" page
+  ├── trip-detail.html    ← Trip detail page (auto-updates)
+  └── trips-data.js       ← ⭐ THE FILE YOU EDIT ⭐
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  HOW THE SYSTEM WORKS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+You ONLY need to edit ONE file: trips-data.js
+
+Everything else — the trip cards on the homepage, the
+"Discover More" detail pages, and the trip dropdown on
+the Join Now form — ALL update automatically when you
+save trips-data.js.
+
+Think of it like a spreadsheet: you fill in the details
+once, and the whole website reflects the changes.
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  HOW TO EDIT A TRIP
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. Open trips-data.js in Notepad (Windows) or TextEdit (Mac)
+2. Find the trip you want to edit (e.g. search for "Mount Kenya")
+3. Change the text INSIDE the quote marks " "
+4. Save the file
+5. Upload to your website — done!
+
+EXAMPLE — Changing trip dates:
+  BEFORE:  dates: "October-17th to October-20th",
+  AFTER:   dates: "November-1st to November-5th",
+
+EXAMPLE — Changing the price:
+  BEFORE:  price: "KES 32,000",
+  AFTER:   price: "KES 35,000",
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  HOW TO ADD A NEW TRIP
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. Open trips-data.js
+2. Scroll to the very end of the file
+3. Before the final ]; line, add a comma after the last }
+4. Then paste this template and fill it in:
+
+  {
+    id: "my-new-trip",
+    title: "Trip Name Here",
+    category: "OVERNIGHT TRIPS",
+    dates: "January 10th to January 15th",
+    image: "PASTE AN IMAGE URL HERE",
+    
+    heroImage: "PASTE A LARGE IMAGE URL HERE",
+    tagline: "A short exciting tagline",
+    description: "Write your full trip description here...",
+    duration: "5 Days / 4 Nights",
+    difficulty: "Moderate",
+    groupSize: "10–20 People",
+    price: "KES 20,000",
+    highlights: [
+      "First highlight here",
+      "Second highlight here",
+      "Third highlight here"
+    ],
+    whatsIncluded: [
+      "Transport from Nairobi",
+      "All meals",
+      "Professional guide"
+    ],
+    whatsNotIncluded: [
+      "Personal spending",
+      "Travel insurance"
+    ],
+    bookingLink: "https://wa.me/254719830090"
+  }
+
+CATEGORY OPTIONS (copy exactly as shown):
+  "OVERNIGHT TRIPS"
+  "INTERNATIONAL TRIPS"
+  "BIG MOUNTAIN TRIPS"
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  HOW TO REMOVE A TRIP
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. Open trips-data.js
+2. Find the trip (search for its title)
+3. Delete everything from the opening { to the closing },
+   (including the comma at the end)
+4. Save and upload
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  HOW TO GET FREE TRIP IMAGES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Option A — Use Unsplash (free, no sign-up needed):
+  1. Go to unsplash.com
+  2. Search for your destination (e.g. "Kenya hiking")
+  3. Right-click an image → "Copy image address"
+  4. Paste that URL as your "image" or "heroImage"
+
+Option B — Use your own photos:
+  1. Upload your photo to your website's images folder
+  2. Use the path like: "/assets/images/my-trip-photo.jpg"
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  GOLDEN RULES (to avoid breaking things!)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✅ DO: Change text INSIDE the quote marks " "
+✅ DO: Keep a comma after each item in a list
+✅ DO: Keep a comma after each trip's closing }
+✅ DO: Save the file before uploading
+
+❌ DON'T: Delete any { } [ ] characters
+❌ DON'T: Remove quote marks " "
+❌ DON'T: Leave out the comma between trips
+❌ DON'T: Use the same "id" for two different trips
+
+If something looks broken, undo your last change (Ctrl+Z)
+and try again, or contact your web developer.
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  NEED HELP?
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+WhatsApp your developer or email them — they can make
+any change for you in under 5 minutes.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

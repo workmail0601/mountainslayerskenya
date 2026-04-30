@@ -1,0 +1,883 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mountain Slayers | Adventure Awaits</title>
+    <link rel="icon" type="image/x-icon" href="/assets/images/favicon/favicon.ico">
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/images/favicon/favicon-16x16.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/images/favicon/favicon-32x32.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/images/favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/assets/images/favicon/android-chrome-192x192.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="/assets/images/favicon/android-chrome-512x512.png">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+
+    <style>
+        /* === GLOBAL FONTS & COLORS === */
+        * { font-family: 'DM Sans', sans-serif; box-sizing: border-box; }
+        :root {
+            --primary: #f3c811;
+            --primary-dim: rgba(243, 200, 17, 0.15);
+            --secondary: #1ab37d;
+            --secondary-dim: rgba(26, 179, 125, 0.15);
+            --dark: #0f172a;
+        }
+
+        /* === NAVIGATION === */
+        #main-nav { transition: all 0.4s ease; }
+        #main-nav.scrolled {
+            background: rgba(255,255,255,0.98);
+            backdrop-filter: blur(10px);
+            padding-top: 0.75rem; padding-bottom: 0.75rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+        }
+        #nav-logo { filter: brightness(0) invert(1); transition: filter 0.4s ease; }
+        #main-nav.scrolled #nav-logo { filter: none; }
+        .nav-link { color: #ffffff; transition: color 0.3s ease; }
+        #main-nav.scrolled .nav-link { color: var(--dark); }
+        #main-nav.scrolled .nav-link:hover { color: var(--secondary); }
+
+        #hamburger-btn {
+            color: #ffffff;
+            transition: color 0.3s ease;
+            background: none;
+            border: none;
+            cursor: pointer;
+            line-height: 1;
+        }
+        #main-nav.scrolled #hamburger-btn { color: var(--dark); }
+
+        #mobile-menu {
+            display: none;
+            position: fixed; inset: 0;
+            background: var(--dark);
+            z-index: 100;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 2rem;
+        }
+        #mobile-menu.open { display: flex; }
+        #mobile-menu a {
+            color: #fff; font-size: 1.5rem; font-weight: 700;
+            text-transform: uppercase; letter-spacing: 0.15em;
+            text-decoration: none; transition: color 0.2s;
+        }
+        #mobile-menu a:hover { color: var(--primary); }
+        #mobile-close {
+            position: absolute; top: 1.5rem; right: 1.5rem;
+            color: #fff; font-size: 2rem; background: none;
+            border: none; cursor: pointer;
+        }
+        .join-btn { background: var(--primary); color: var(--dark) !important; }
+        .join-btn:hover { background: var(--secondary); color: #fff !important; }
+
+        /* === HERO === */
+        .hero-fullscreen {
+            height: 100vh; width: 100%;
+            background-color: #000;
+            position: relative; overflow: hidden;
+        }
+        .hero-slide {
+            position: absolute; inset: 0; opacity: 0;
+            filter: brightness(0.65);
+            animation: cinematicFade 21s infinite;
+            object-fit: cover; width: 100%; height: 100%;
+        }
+        .hero-slide:nth-child(1) { animation-delay: 0s; }
+        .hero-slide:nth-child(2) { animation-delay: 7s; }
+        .hero-slide:nth-child(3) { animation-delay: 14s; }
+        @keyframes cinematicFade {
+            0%   { opacity: 0; transform: scale(1.05); }
+            10%  { opacity: 1; }
+            33%  { opacity: 1; }
+            43%  { opacity: 0; transform: scale(1); }
+            100% { opacity: 0; }
+        }
+        .hero-content { max-width: 780px; z-index: 30; }
+
+        .hero-title {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2.4rem, 5.5vw, 4.2rem);
+            font-weight: 400;
+            line-height: 1.25;
+            color: #ffffff;
+        }
+        .hero-title strong {
+            font-weight: 900;
+            color: var(--primary);
+            display: block;
+            font-size: clamp(2.8rem, 6.5vw, 5rem);
+        }
+
+        .scroll-line {
+            position: absolute; bottom: 40px; left: 50%;
+            transform: translateX(-50%); width: 1px; height: 60px;
+            background: linear-gradient(to bottom, var(--primary), transparent);
+            z-index: 30; opacity: 0.7;
+        }
+
+        /* === ETHOS === */
+        .ethos-number {
+            font-family: 'Playfair Display', serif;
+            font-size: 110px; line-height: 1; font-weight: 900;
+            position: absolute; top: -20px; right: -10px; z-index: -1;
+            color: transparent;
+            -webkit-text-stroke: 1px rgba(15,23,42,0.1);
+            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+            clip-path: inset(0 0 100% 0);
+        }
+        .ethos-card:hover .ethos-number {
+            -webkit-text-stroke: 1px transparent;
+            color: rgba(147,51,234,0.2);
+            clip-path: inset(0 0 0% 0);
+            transform: translateY(15px);
+        }
+        .ethos-accent {
+            width: 3px; height: 30px; background: var(--primary);
+            margin-bottom: 24px; position: relative;
+            transition: all 0.6s cubic-bezier(0.83, 0, 0.17, 1); border-radius: 4px;
+        }
+        .ethos-card:hover .ethos-accent { height: 100px; width: 1px; opacity: 0.8; }
+        .ethos-card::after {
+            content: ""; position: absolute; top: 0; left: -20px;
+            width: 0%; height: 100%;
+            background: linear-gradient(90deg, var(--primary-dim) 0%, transparent 100%);
+            z-index: -2; transition: width 0.6s ease;
+        }
+        .ethos-card:hover::after { width: 100%; }
+        .ethos-card h3 { transition: all 0.5s ease; }
+        .ethos-card:hover h3 { color: var(--dark); letter-spacing: 0.05em; transform: translateY(-2px); }
+        .ethos-card p { transition: color 0.5s ease; }
+        .ethos-card:hover p { color: #334155; }
+
+        /* ═══════════════════════════════════════════════
+           PARTNERS MARQUEE
+        ═══════════════════════════════════════════════ */
+        .partners-section {
+            background: #f8fafc;
+            padding: 52px 0 48px;
+            overflow: hidden;
+        }
+        .partners-eyebrow {
+            font-size: 9px; font-weight: 700; text-transform: uppercase;
+            letter-spacing: 0.5em; color: #94a3b8;
+            display: block; text-align: center; margin-bottom: 32px;
+        }
+        .marquee-track {
+            position: relative;
+            max-width: 780px;
+            margin: 0 auto;
+            overflow: hidden;
+        }
+        .marquee-track::before,
+        .marquee-track::after {
+            content: '';
+            position: absolute;
+            top: 0; bottom: 0;
+            width: 80px;
+            z-index: 10;
+            pointer-events: none;
+        }
+        .marquee-track::before {
+            left: 0;
+            background: linear-gradient(to right, #f8fafc, transparent);
+        }
+        .marquee-track::after {
+            right: 0;
+            background: linear-gradient(to left, #f8fafc, transparent);
+        }
+        .marquee-inner {
+            display: flex;
+            align-items: center;
+            gap: 0;
+            width: max-content;
+            animation: marqueeScroll 28s linear infinite;
+        }
+        .marquee-track:hover .marquee-inner {
+            animation-play-state: paused;
+        }
+        @keyframes marqueeScroll {
+            0%   { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+        .logo-pill {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 14px 36px;
+            margin: 0 16px;
+            background: white;
+            border: 1px solid #e8ecf0;
+            border-radius: 8px;
+            white-space: nowrap;
+            cursor: default;
+            transition: all 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        }
+        .logo-pill::before {
+            content: '';
+            position: absolute; inset: 0;
+            background: linear-gradient(135deg, var(--primary-dim), rgba(26,179,125,0.08));
+            opacity: 0;
+            transition: opacity 0.35s ease;
+        }
+        .logo-pill:hover {
+            border-color: var(--secondary);
+            box-shadow: 0 8px 28px rgba(26,179,125,0.18);
+            transform: translateY(-3px) scale(1.04);
+        }
+        .logo-pill:hover::before { opacity: 1; }
+        .logo-pill:hover .logo-name { color: var(--secondary); }
+        .logo-img {
+            width: 32px;
+            height: 32px;
+            object-fit: contain;
+            margin-right: 12px;
+            transition: transform 0.3s;
+            border-radius: 4px;
+        }
+        .logo-pill:hover .logo-img { transform: scale(1.1) rotate(-3deg); }
+        .logo-name {
+            font-size: 13px;
+            font-weight: 800;
+            color: #334155;
+            letter-spacing: -0.01em;
+            transition: color 0.3s;
+            position: relative;
+            z-index: 1;
+        }
+        .logo-name .logo-sub {
+            display: block;
+            font-size: 8px;
+            font-weight: 600;
+            color: #94a3b8;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            margin-top: 1px;
+            transition: color 0.3s;
+        }
+        .logo-pill:hover .logo-name .logo-sub { color: rgba(26,179,125,0.7); }
+
+        /* ═══════════════════════════════════════════════
+           UPCOMING TRIPS — 4-SLOT STATIC GRID
+        ═══════════════════════════════════════════════ */
+        .upcoming-section {
+            background: var(--dark);
+            padding: 80px 0 88px;
+        }
+        .upcoming-header {
+            text-align: center; margin-bottom: 56px; padding: 0 24px;
+        }
+        .upcoming-header .label {
+            font-size: 9px; font-weight: 900; text-transform: uppercase;
+            letter-spacing: 0.5em; color: var(--primary); display: block; margin-bottom: 12px;
+        }
+        .upcoming-header h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.2rem; font-weight: 700; color: #fff;
+        }
+
+        .upcoming-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2px;
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+        @media (max-width: 768px) {
+            .upcoming-grid { grid-template-columns: 1fr; }
+        }
+
+        .slot {
+            position: relative;
+            overflow: hidden;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.07);
+            border-radius: 4px;
+        }
+
+        .slot-badge {
+            position: absolute; top: 16px; left: 16px; z-index: 20;
+            font-size: 8px; font-weight: 900; text-transform: uppercase;
+            letter-spacing: 0.2em; padding: 4px 12px; border-radius: 3px;
+        }
+        .slot-badge.intl { background: var(--secondary); color: #fff; }
+        .slot-badge.big  { background: var(--primary);   color: var(--dark); }
+        .slot-badge.local { background: #6366f1; color: #fff; }
+        .slot-badge.overnight { background: #e11d48; color: #fff; }
+
+        .slot-slides { position: relative; width: 100%; height: 100%; }
+        .slot-slide {
+            position: absolute; inset: 0;
+            opacity: 0; transition: opacity 0.8s ease;
+            display: flex; flex-direction: column;
+        }
+        .slot-slide.active { opacity: 1; position: relative; }
+
+        .slot-slide img {
+            width: 100%; height: 200px; object-fit: cover;
+            filter: brightness(0.75);
+            transition: filter 0.4s ease, transform 0.6s ease;
+            display: block;
+        }
+        .slot:hover .slot-slide.active img {
+            filter: brightness(0.95);
+            transform: scale(1.03);
+        }
+        .slot-img-wrap { overflow: hidden; position: relative; }
+
+        .slot-body {
+            padding: 20px 22px 24px;
+            flex: 1; display: flex; flex-direction: column;
+        }
+        .slot-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1rem; font-weight: 700; color: #fff;
+            margin-bottom: 8px; line-height: 1.3;
+        }
+        .slot-date {
+            font-size: 11px; color: rgba(255,255,255,0.45);
+            display: flex; align-items: center; gap: 6px; font-weight: 500;
+        }
+        .slot-date i { color: var(--primary); font-size: 10px; }
+        .slot-price {
+            font-size: 13px; font-weight: 900; color: var(--primary); margin-top: 10px;
+        }
+        .slot-footer {
+            display: flex; align-items: center; justify-content: space-between;
+            margin-top: 16px; padding-top: 14px;
+            border-top: 1px solid rgba(255,255,255,0.08);
+        }
+        .slot-dots { display: flex; gap: 5px; align-items: center; }
+        .slot-dot {
+            width: 5px; height: 5px; border-radius: 50%;
+            background: rgba(255,255,255,0.2); cursor: pointer;
+            transition: background 0.3s, transform 0.3s;
+        }
+        .slot-dot.active { background: var(--primary); transform: scale(1.3); }
+        .slot-cta {
+            font-size: 9px; font-weight: 900; text-transform: uppercase;
+            letter-spacing: 0.2em; color: var(--secondary);
+            text-decoration: none;
+            display: flex; align-items: center; gap: 5px;
+        }
+        .slot-cta:hover { color: var(--primary); }
+
+        .slot-count {
+            position: absolute; top: 16px; right: 16px; z-index: 20;
+            width: 28px; height: 28px; border-radius: 50%;
+            background: rgba(0,0,0,0.55); backdrop-filter: blur(4px);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 10px; font-weight: 900; color: #fff;
+        }
+
+        .slot-empty {
+            padding: 48px 24px; text-align: center;
+            color: rgba(255,255,255,0.3); font-size: 13px; font-style: italic;
+        }
+
+        .upcoming-footer {
+            text-align: center; margin-top: 48px;
+        }
+        .btn-view-all {
+            display: inline-block; padding: 14px 44px;
+            border: 1.5px solid rgba(255,255,255,0.2); color: #fff;
+            font-size: 10px; font-weight: 900; text-transform: uppercase;
+            letter-spacing: 0.25em; text-decoration: none;
+            border-radius: 2px; transition: all 0.3s ease;
+        }
+        .btn-view-all:hover {
+            border-color: var(--primary); color: var(--primary);
+        }
+
+        /* === TESTIMONIALS === */
+        .testimonial-island {
+            max-width: 1050px; margin: 60px auto;
+            padding: 80px 60px; border-radius: 60px;
+            background-color: #ffffff;
+            box-shadow: 0 50px 120px -30px rgba(0,0,0,0.08);
+            background-image:
+                radial-gradient(at 15% 25%, rgba(26,179,125,0.1) 0px, transparent 45%),
+                radial-gradient(at 85% 15%, rgba(243,200,17,0.15) 0px, transparent 45%),
+                radial-gradient(at 50% 90%, rgba(26,179,125,0.08) 0px, transparent 50%);
+            position: relative;
+        }
+        @media (max-width: 768px) { .testimonial-island { padding: 40px 24px; border-radius: 30px; } }
+        .testimonial-card-v4 {
+            background: white; border: 1px solid #f1f5f9;
+            transition: all 0.7s cubic-bezier(0.19, 1, 0.22, 1);
+            display: flex; flex-direction: column;
+            justify-content: space-between; min-height: 380px;
+            padding: 2rem; filter: grayscale(100%); opacity: 0.7;
+        }
+        .testimonial-content { transform: translateY(-10px); }
+        .testimonial-container:hover .testimonial-card-v4 { opacity: 0.3; transform: scale(0.94); }
+        .testimonial-container .testimonial-card-v4:hover {
+            filter: grayscale(0%); opacity: 1;
+            transform: scale(1.04) translateY(-16px);
+            z-index: 40; box-shadow: 0 40px 80px -20px rgba(147,51,234,0.2);
+        }
+        .avatar-fixed { width: 44px; height: 44px; border-radius: 50%; object-fit: cover; filter: contrast(1.1); }
+
+        /* === CTA BUTTON === */
+        .btn-adventure {
+            position: relative; display: inline-block;
+            padding: 18px 50px; background: transparent;
+            color: var(--dark); font-size: 11px; font-weight: 900;
+            text-transform: uppercase; letter-spacing: 4px;
+            border: 2px solid var(--dark); overflow: hidden;
+            transition: color 0.3s 0.1s ease-out; z-index: 1;
+            cursor: pointer; text-decoration: none;
+        }
+        .btn-adventure::before, .btn-adventure::after {
+            content: ""; position: absolute; top: 0; height: 100%; width: 0;
+            background: var(--secondary);
+            transition: width 0.4s cubic-bezier(0.86, 0, 0.07, 1); z-index: -1;
+        }
+        .btn-adventure::before { left: 0; transform: skewX(25deg); transform-origin: top left; }
+        .btn-adventure::after { right: 0; transform: skewX(25deg); transform-origin: bottom right; transition-delay: 0.1s; }
+        .btn-adventure:hover { color: #fff; border-color: var(--secondary); }
+        .btn-adventure:hover::before, .btn-adventure:hover::after { width: 120%; }
+        .btn-adventure:active { background: var(--primary); border-color: var(--primary); transform: scale(0.92); transition: 0.1s; }
+
+        /* === FOOTER === */
+        .track { width: 45px; height: 2px; background-color: #374151; position: relative; overflow: hidden; margin: 8px 0 15px 0; }
+        .shuttle { width: 15px; height: 100%; background-color: var(--primary); position: absolute; animation: slide 2.5s infinite ease-in-out; }
+        @keyframes slide { 0% { left: -100%; } 100% { left: 100%; } }
+        .footer-bg {
+            background: linear-gradient(90deg, #050b1a 0%, #050b1a 65%, #061a12 100%);
+            border-top-left-radius: 110px;
+        }
+        .whatsapp-overlay {
+            position: fixed; bottom: 30px; right: 30px;
+            z-index: 999; text-decoration: none;
+        }
+        .whatsapp-btn {
+            background-color: #25d366; color: white;
+            width: 55px; height: 55px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 28px; box-shadow: 0 4px 15px rgba(0,0,0,0.3); transition: transform 0.3s ease;
+        }
+        .whatsapp-btn:hover { transform: scale(1.1); }
+    </style>
+</head>
+<body class="font-sans text-gray-800 bg-white">
+
+<!-- ════ MOBILE MENU ════ -->
+<div id="mobile-menu">
+    <button id="mobile-close"><i class="fas fa-times"></i></button>
+    <a href="/">Home</a>
+    <a href="/about.html">About</a>
+    <a href="/trips.html">Trips</a>
+    <a href="/blog.html">Blog</a>
+    <a href="/join.html">Contact</a>
+    <a href="/shop.html">Shop</a>
+    <a href="/join.html" style="color: var(--primary) !important;">Join Now →</a>
+</div>
+
+<!-- ════ NAV ════ -->
+<nav id="main-nav" class="fixed w-full z-50 px-6 md:px-10 py-3 flex items-center justify-between">
+    <a href="/"><img src="/assets/images/msl.webp" alt="Mountain Slayers Kenya" class="h-10 md:h-14 w-auto" id="nav-logo"></a>
+    <div class="hidden md:flex items-center space-x-8 text-[11px] font-black uppercase tracking-[0.18em]">
+        <a href="/" class="nav-link hover:text-yellow-400 transition-colors">Home</a>
+        <a href="/about.html" class="nav-link hover:text-yellow-400 transition-colors">About</a>
+        <a href="/trips.html" class="nav-link hover:text-yellow-400 transition-colors">Trips</a>
+        <a href="/blog.html" class="nav-link hover:text-yellow-400 transition-colors">Blog</a>
+        <a href="/join.html" class="nav-link hover:text-yellow-400 transition-colors">Contact</a>
+        <a href="/shop.html" class="nav-link hover:text-yellow-400 transition-colors">Shop</a>
+        <a href="/join.html" class="join-btn ml-2 px-5 py-2 rounded text-[10px] font-black tracking-widest transition-colors flex items-center gap-1">
+            <i class="fas fa-play text-[8px]"></i> Join Now
+        </a>
+    </div>
+    <button class="md:hidden text-2xl" id="hamburger-btn" aria-label="Open menu">
+        <i class="fas fa-bars"></i>
+    </button>
+</nav>
+
+<!-- ════ HERO ════ -->
+<section class="hero-fullscreen flex items-center justify-center">
+    <div class="absolute inset-0 z-0">
+        <img src="/assets/images/002.webp" class="hero-slide">
+        <img src="/assets/images/003.webp" class="hero-slide">
+        <img src="/assets/images/001.webp" class="hero-slide">
+    </div>
+    <div class="absolute inset-0 z-10 bg-black/50"></div>
+    <div class="hero-content text-center px-8 relative">
+        <h1 class="hero-title">
+            Travel to any corner of the world with
+            <strong>Mountain Slayers Kenya</strong>
+        </h1>
+    </div>
+    <div class="scroll-line"></div>
+</section>
+
+<!-- ════ ETHOS ════ -->
+<section class="py-32 px-6 max-w-7xl mx-auto">
+    <div class="text-center mb-24">
+        <span class="text-[10px] font-black uppercase tracking-[0.5em] text-gray-400">Our Core Foundation</span>
+        <h2 class="text-5xl font-black mt-4 tracking-tighter text-slate-900" style="font-family: 'Playfair Display', serif;">
+            Our <span style="color: var(--secondary);">Ethos</span>
+        </h2>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-16">
+        <div class="ethos-card relative group">
+            <span class="ethos-number">01</span>
+            <div class="ethos-accent"></div>
+            <h3 class="text-lg font-black uppercase tracking-tight mb-4 text-slate-800">Relationship <br>With God</h3>
+            <p class="text-[13px] leading-relaxed text-gray-500 font-medium">Hiking grants a serene escape from the chaos of daily life, fostering a deep sense of inner peace. Within the abundance of nature, we connect deeply and intimately with God.</p>
+        </div>
+        <div class="ethos-card relative group">
+            <span class="ethos-number">02</span>
+            <div class="ethos-accent"></div>
+            <h3 class="text-lg font-black uppercase tracking-tight mb-4 text-slate-800">Relationship <br>With Self</h3>
+            <p class="text-[13px] leading-relaxed text-gray-500 font-medium">The magnificent outdoors compels us to take a deep look at self, to marvel at the uniqueness of yourself amongst all other creations and appreciate who you are.</p>
+        </div>
+        <div class="ethos-card relative group">
+            <span class="ethos-number">03</span>
+            <div class="ethos-accent"></div>
+            <h3 class="text-lg font-black uppercase tracking-tight mb-4 text-slate-800">Relationship <br>With Community</h3>
+            <p class="text-[13px] leading-relaxed text-gray-500 font-medium">The journey is incomplete without others. At Mountain Slayers Kenya we treasure and nourish relationships with like-minded hikers in a respectful and supportive way.</p>
+        </div>
+        <div class="ethos-card relative group">
+            <span class="ethos-number">04</span>
+            <div class="ethos-accent"></div>
+            <h3 class="text-lg font-black uppercase tracking-tight mb-4 text-slate-800">Relationship <br>With Nature</h3>
+            <p class="text-[13px] leading-relaxed text-gray-500 font-medium">Nature is our playground. We cherish it and preserve it for the gift that it is. Every trail is a privilege, every peak a lesson in stewardship.</p>
+        </div>
+    </div>
+</section>
+
+<!-- ════ PARTNERS MARQUEE ════ -->
+<section class="partners-section">
+    <span class="partners-eyebrow">We've also worked with</span>
+    <div class="marquee-track">
+        <div class="marquee-inner">
+            <!-- Original set -->
+            <div class="logo-pill">
+                <img src="/assets/images/mls.png" alt="Mombasa Law Society" class="logo-img">
+                <span class="logo-name">Mombasa Law Society<span class="logo-sub">Legal Excellence</span></span>
+            </div>
+            <div class="logo-pill">
+                <img src="/assets/images/h4c.png" alt="Hope for Cancer Kids" class="logo-img">
+                <span class="logo-name">Hope for Cancer Kids<span class="logo-sub">Children's Wellbeing</span></span>
+            </div>
+            <div class="logo-pill">
+                <img src="/assets/images/prs.png" alt="Pernod Ricard" class="logo-img">
+                <span class="logo-name">Pernod Ricard<span class="logo-sub">Premium Spirits</span></span>
+            </div>
+            <!-- Duplicate set for seamless loop -->
+            <div class="logo-pill">
+                <img src="/assets/images/mls.png" alt="Mombasa Law Society" class="logo-img">
+                <span class="logo-name">Mombasa Law Society<span class="logo-sub">Legal Excellence</span></span>
+            </div>
+            <div class="logo-pill">
+                <img src="/assets/images/h4c.png" alt="Hope for Cancer Kids" class="logo-img">
+                <span class="logo-name">Hope for Cancer Kids<span class="logo-sub">Children's Wellbeing</span></span>
+            </div>
+            <div class="logo-pill">
+                <img src="/assets/images/prs.png" alt="Pernod Ricard" class="logo-img">
+                <span class="logo-name">Pernod Ricard<span class="logo-sub">Premium Spirits</span></span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ════ WHAT WE OFFER ════ -->
+<section class="py-20 bg-gray-50 px-10">
+    <div class="max-w-7xl mx-auto text-center mb-16">
+        <h2 class="text-4xl font-bold mb-4" style="font-family: 'Playfair Display', serif;">What We Offer</h2>
+        <p class="text-gray-400">Group trips, Solo trips and Customized trips. Talk to us to come up with the perfect fit.</p>
+    </div>
+    <div class="max-w-6xl mx-auto grid md:grid-cols-2 gap-20 items-center mb-32">
+        <div>
+            <h3 class="text-2xl font-bold mb-4" style="color: var(--secondary);">Unleash Your Inner Explorer</h3>
+            <p class="text-gray-600 leading-relaxed mb-6">Go beyond the marked trails and discover hidden gems with our diverse community of experienced hikers. We'll lead you on adventures you wouldn't find alone, conquer challenging hikes together, and share breathtaking sights along the way.</p>
+            <a href="join.html#book">
+                <button class="text-white px-8 py-3 rounded hover:opacity-90 transition shadow-lg font-bold" style="background: var(--secondary);">Book With Us</button>
+            </a>
+        </div>
+        <div class="rounded-2xl overflow-hidden shadow-2xl rotate-2 hover:rotate-0 transition duration-500">
+            <img src="/assets/images/004.webp" alt="Explorer" class="w-full">
+        </div>
+    </div>
+    <div class="max-w-6xl mx-auto grid md:grid-cols-2 gap-20 items-center">
+        <div class="order-2 md:order-1 rounded-2xl overflow-hidden shadow-2xl -rotate-2 hover:rotate-0 transition duration-500">
+            <img src="/assets/images/005.webp" alt="Hiking" class="w-full">
+        </div>
+        <div class="order-1 md:order-2">
+            <h3 class="text-2xl font-bold mb-4" style="color: var(--secondary);">Hike Smarter, Not Harder</h3>
+            <p class="text-gray-600 leading-relaxed mb-6">Leave the hard and boring work of planning to us. All you need to do is talk to us, and we shall do the rest.</p>
+            <a href="blog.html">
+                <button class="text-white px-8 py-3 rounded hover:opacity-90 transition shadow-lg font-bold" style="background: var(--secondary);">Read Articles</button>
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- ════ UPCOMING TRIPS ════ -->
+<section class="upcoming-section">
+    <div class="upcoming-header">
+        <span class="label"><i class="fas fa-route mr-2"></i>Upcoming Trips</span>
+        <h2>Where are we headed next?</h2>
+    </div>
+    <div class="upcoming-grid" id="upcoming-grid"></div>
+    <div class="upcoming-footer">
+        <a href="/trips.html" class="btn-view-all">View All Trips &nbsp;→</a>
+    </div>
+</section>
+
+<!-- ════ TESTIMONIALS ════ -->
+<section class="py-24 bg-slate-50 px-4">
+    <div class="testimonial-island">
+        <div class="text-center mb-24">
+            <p class="text-[10px] font-black text-gray-400 uppercase tracking-[0.6em] mb-4">Thousands are vouching for us</p>
+            <h2 class="text-3xl md:text-4xl font-black text-slate-900 tracking-tighter" style="font-family: 'Playfair Display', serif;">What our happy clients say</h2>
+        </div>
+        <div class="testimonial-container grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div class="testimonial-card-v4 rounded-sm">
+                <div class="testimonial-content space-y-4">
+                    <span class="text-5xl text-gray-100 font-serif block h-8" style="color: var(--primary); opacity: 0.4;">"</span>
+                    <p class="text-[13px] leading-relaxed text-gray-500 font-medium">Drakensberg simply refused to be put in a box to conform to set expectations. I was taken back by the beauty that the mountains brought, the beauty of climbing with those who I now consider to be friends and the joy of achievement. It was an experience that I will forever cherish. Thanks to Mountain Slayers for making it happen for me.</p>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <img src="/assets/images/debby.webp" class="avatar-fixed shadow-md" alt="Debby">
+                    <div>
+                        <p class="font-bold text-[11px] text-slate-900 uppercase">Debby</p>
+                        <p class="text-[9px] text-gray-400 font-bold uppercase tracking-widest">Machu Pic-chu, Peru 2023</p>
+                    </div>
+                </div>
+            </div>
+            <div class="testimonial-card-v4 rounded-sm">
+                <div class="testimonial-content space-y-4">
+                    <span class="text-5xl text-gray-100 font-serif block h-8" style="color: var(--primary); opacity: 0.4;">"</span>
+                    <p class="text-[13px] leading-relaxed text-gray-500 font-medium">An experience I am yet to wrap my mind about. The Maluti remain, even now, indescribable. They left me content though a yearning of them lingers.</p>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <img src="/assets/images/mungai.webp" class="avatar-fixed shadow-md" alt="Mungai">
+                    <div>
+                        <p class="font-bold text-[11px] text-slate-900 uppercase">Mungai</p>
+                        <p class="text-[9px] text-gray-400 font-bold uppercase tracking-widest">Drackensburg, Lesotho 2019</p>
+                    </div>
+                </div>
+            </div>
+            <div class="testimonial-card-v4 rounded-sm">
+                <div class="testimonial-content space-y-4">
+                    <span class="text-5xl text-gray-100 font-serif block h-8" style="color: var(--primary); opacity: 0.4;">"</span>
+                    <p class="text-[13px] leading-relaxed text-gray-500 font-medium">Hiking has been a transformative experience for me, allowing me to reconnect with nature and myself in ways I never imagined. Each trail offers a new adventure and a chance to push my limits, both physically and mentally. I've found a sense of peace and fulfillment on the trails that I carry with me long after the hike is over.</p>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <img src="/assets/images/tina.webp" class="avatar-fixed shadow-md" alt="Tina">
+                    <div>
+                        <p class="font-bold text-[11px] text-slate-900 uppercase">Tina</p>
+                        <p class="text-[9px] text-gray-400 font-bold uppercase tracking-widest">Drackensburg, Lesotho 2019</p>
+                    </div>
+                </div>
+            </div>
+            <div class="testimonial-card-v4 rounded-sm">
+                <div class="testimonial-content space-y-4">
+                    <span class="text-5xl text-gray-100 font-serif block h-8" style="color: var(--primary); opacity: 0.4;">"</span>
+                    <p class="text-[13px] leading-relaxed text-gray-500 font-medium">Hiking has become my sanctuary, where I can escape the hustle and bustle of everyday life. I find clarity and inspiration on the trails, reconnecting with my innermost thoughts and desires. The beauty and majesty of nature never fail to leave me in awe, reminding me of the simple joys in life.</p>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <img src="/assets/images/annie.webp" class="avatar-fixed shadow-md" alt="Ann">
+                    <div>
+                        <p class="font-bold text-[11px] text-slate-900 uppercase">Ann</p>
+                        <p class="text-[9px] text-gray-400 font-bold uppercase tracking-widest">Mount Toubkal, Morocco 2022</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="text-center mt-24">
+            <a href="join.html#book" class="btn-adventure">Book Your Adventure</a>
+        </div>
+    </div>
+</section>
+
+<!-- ════ WHATSAPP ════ -->
+<a href="https://wa.me/254722957390" class="whatsapp-overlay" target="_blank">
+    <div class="whatsapp-btn"><i class="fab fa-whatsapp"></i></div>
+</a>
+
+<!-- ════ FOOTER ════ -->
+<footer class="footer-bg text-white pt-20 pb-10 px-6 md:px-24">
+    <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-16 items-start">
+        <div class="flex flex-col space-y-8">
+            <a href="/" class="block group w-fit">
+                <img src="/assets/images/msl.webp" alt="Mountain Slayers Kenya"
+                     class="h-16 w-auto brightness-0 invert opacity-80 group-hover:opacity-100 transition-all duration-500 transform group-hover:scale-105">
+            </a>
+            <div class="space-y-4">
+                <p class="text-[13px] leading-relaxed text-gray-400 max-w-[280px] font-medium italic border-l-2 pl-4" style="border-color: var(--primary);">
+                    "We are not only passionate about what we do, but we are trained and certified to do what we do."
+                </p>
+                <p class="text-[10px] uppercase tracking-[0.3em] text-gray-500 font-bold">Safety first. Adventure always.</p>
+            </div>
+        </div>
+        <div>
+            <h4 class="text-[15px] font-semibold">Join Us</h4>
+            <div class="track"><div class="shuttle"></div></div>
+            <ul class="text-[13px] space-y-2 text-gray-400">
+                <li class="text-white font-medium">Mountain Slayers</li>
+                <li>Cathy Flats, Lenana Road</li>
+                <li>Nairobi</li>
+                <li class="pt-3">
+                    <a href="mailto:info@mountainslayers.co.ke" class="underline underline-offset-4 hover:text-white transition-colors" style="text-decoration-color: var(--primary);">
+                        info@mountainslayers.co.ke
+                    </a>
+                </li>
+                <li class="pt-2 text-gray-300">+254 722 957390</li>
+            </ul>
+        </div>
+        <div>
+            <h4 class="text-[15px] font-semibold">Links</h4>
+            <div class="track"><div class="shuttle"></div></div>
+            <ul class="text-[13px] space-y-4 text-gray-400">
+                <li><a href="/" class="hover:text-white transition-colors">Home</a></li>
+                <li><a href="about.html" class="hover:text-white transition-colors">About</a></li>
+                <li><a href="/trips.html" class="hover:text-white transition-colors">Trips</a></li>
+                <li><a href="join.html" class="hover:text-white transition-colors">Contact Us</a></li>
+            </ul>
+        <div class="flex space-x-6 mt-10 text-white text-lg">
+            <a href="https://x.com/Mountainslayers" class="hover:text-blue-400 transition-colors"><i class="fab fa-twitter"></i></a>
+            <a href="https://www.instagram.com/mountainslayerske" class="transition-colors" style="color: inherit;" onmouseover="this.style.color='#f3c811'" onmouseout="this.style.color='inherit'"><i class="fab fa-instagram"></i></a>
+            <a href="https://www.facebook.com/people/Mountain-Slayers-Kenya-Hiking-Expeditions/100063530744880/" class="hover:text-blue-600 transition-colors"><i class="fab fa-facebook-f"></i></a>
+            <a href="https://www.tiktok.com/@mountainslayers.ke" class="hover:text-pink-400 transition-colors"><i class="fab fa-tiktok"></i></a>
+            <a href="https://www.linkedin.com/company/mountain-slayers-kenya/" class="hover:text-blue-500 transition-colors"><i class="fab fa-linkedin-in"></i></a>
+        </div>
+        </div>
+    </div>
+    <div class="max-w-7xl mx-auto mt-20 pt-8 border-t border-gray-800/50">
+        <p class="text-[12px] text-gray-500 text-center">
+            &copy; Copyright - Mountain Slayers Kenya all rights reserved |
+            <a href="https://www.sketchbook.co.ke/" class="hover:underline">Created by Sketchbook Kenya</a>.
+        </p>
+    </div>
+</footer>
+
+<script src="trips-data.js"></script>
+<script>
+    // ── NAV SCROLL ──
+    const nav = document.getElementById('main-nav');
+    window.addEventListener('scroll', () => nav.classList.toggle('scrolled', window.scrollY > 50));
+
+    // ── MOBILE MENU ──
+    document.getElementById('hamburger-btn').addEventListener('click', () => document.getElementById('mobile-menu').classList.add('open'));
+    document.getElementById('mobile-close').addEventListener('click', () => document.getElementById('mobile-menu').classList.remove('open'));
+    document.querySelectorAll('#mobile-menu a').forEach(l => l.addEventListener('click', () => document.getElementById('mobile-menu').classList.remove('open')));
+
+    // ══════════════════════════════════════════════════
+    //  UPCOMING TRIPS — 4-SLOT ROTATOR
+    // ══════════════════════════════════════════════════
+    const SLOT_CONFIGS = [
+        { label: 'International',     badgeClass: 'intl',  filter: 'INTERNATIONAL TRIPS' },
+        { label: 'International',     badgeClass: 'intl',  filter: 'INTERNATIONAL TRIPS' },
+        { label: 'Big Mountain',      badgeClass: 'big',   filter: 'BIG MOUNTAIN TRIPS'  },
+        { label: 'Local & Overnight', badgeClass: 'local', filter: 'DAY TRIPS' },
+    ];
+
+    function buildSlot(cfg, trips, slotIdx) {
+        const grid = document.getElementById('upcoming-grid');
+        const slot = document.createElement('div');
+        slot.className = 'slot';
+
+        if (!trips.length) {
+            slot.innerHTML = `
+                <span class="slot-badge ${cfg.badgeClass}">${cfg.label}</span>
+                <div class="slot-empty"><i class="fas fa-mountain mb-2 block text-2xl opacity-30"></i>No upcoming trips — check back soon!</div>
+            `;
+            grid.appendChild(slot);
+            return;
+        }
+
+        function renderSlide(trip, isActive) {
+            return `
+                <div class="slot-slide ${isActive ? 'active' : ''}">
+                    <div class="slot-img-wrap">
+                        <img src="${trip.image}" alt="${trip.title}" loading="lazy">
+                    </div>
+                    <div class="slot-body">
+                        <div class="slot-title">${trip.title}</div>
+                        <div class="slot-date"><i class="fas fa-calendar-alt"></i>${trip.dates}</div>
+                        <div class="slot-price">${trip.price}</div>
+                        <div class="slot-footer">
+                            <div class="slot-dots" id="dots-${slotIdx}">
+                                ${trips.map((_, i) => `<span class="slot-dot ${i === 0 ? 'active' : ''}" data-i="${i}"></span>`).join('')}
+                            </div>
+                            <a href="trips.html?filter=${encodeURIComponent(cfg.filter)}" class="slot-cta">
+                                See All &nbsp;<i class="fas fa-arrow-right text-[8px]"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        slot.innerHTML = `
+            <span class="slot-badge ${cfg.badgeClass}">${cfg.label}</span>
+            <span class="slot-count">${trips.length}</span>
+            <div class="slot-slides" id="slides-${slotIdx}">
+                ${trips.map((t, i) => renderSlide(t, i === 0)).join('')}
+            </div>
+        `;
+        grid.appendChild(slot);
+
+        if (trips.length <= 1) return;
+
+        let current = 0;
+        function goTo(idx) {
+            const slidesEl = document.getElementById(`slides-${slotIdx}`);
+            const slides = slidesEl.querySelectorAll('.slot-slide');
+            const dotsEl = document.getElementById(`dots-${slotIdx}`);
+            const dots = dotsEl ? dotsEl.querySelectorAll('.slot-dot') : [];
+            slides.forEach((s, i) => {
+                s.classList.toggle('active', i === idx);
+                s.style.position = i === idx ? 'relative' : 'absolute';
+                s.style.opacity = i === idx ? '1' : '0';
+            });
+            dots.forEach((d, i) => d.classList.toggle('active', i === idx));
+            current = idx;
+        }
+
+        slot.addEventListener('click', (e) => {
+            const dot = e.target.closest('.slot-dot');
+            if (dot) goTo(parseInt(dot.dataset.i));
+        });
+
+        let timer = setInterval(() => goTo((current + 1) % trips.length), 4000);
+        slot.addEventListener('mouseenter', () => clearInterval(timer));
+        slot.addEventListener('mouseleave', () => {
+            timer = setInterval(() => goTo((current + 1) % trips.length), 4000);
+        });
+    }
+
+    onTripsReady(function(trips) {
+        const grid = document.getElementById('upcoming-grid');
+        grid.innerHTML = '';
+
+        const intlTrips = trips
+            .filter(t => t.category === 'INTERNATIONAL TRIPS')
+            .sort((a, b) => new Date(a.startDate) - new Date(b.startDate));
+        const intlMid = Math.ceil(intlTrips.length / 2);
+
+        buildSlot(SLOT_CONFIGS[0], intlTrips.slice(0, intlMid), 0);
+        buildSlot(SLOT_CONFIGS[1], intlTrips.slice(intlMid), 1);
+
+        const bigTrips = trips
+            .filter(t => t.category === 'BIG MOUNTAIN TRIPS')
+            .sort((a, b) => new Date(a.startDate) - new Date(b.startDate));
+        buildSlot(SLOT_CONFIGS[2], bigTrips, 2);
+
+        const localTrips = trips
+            .filter(t => ['DAY TRIPS', 'OVERNIGHT TRIPS'].includes(t.category))
+            .sort((a, b) => new Date(a.startDate) - new Date(b.startDate));
+        buildSlot(SLOT_CONFIGS[3], localTrips, 3);
+    });
+</script>
+</body>
+</html>
