@@ -495,7 +495,7 @@
         const loading = document.getElementById('blog-loading');
         const errEl = document.getElementById('blog-error');
         try {
-            const res = await fetch('/blog.json');
+            const res = await fetch('blog.json');
             if (!res.ok) throw new Error('fetch failed');
             const posts = await res.json();
             loading.style.display = 'none';
